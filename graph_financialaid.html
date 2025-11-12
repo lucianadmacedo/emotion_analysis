@@ -1,0 +1,155 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 800px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#95E1D3", "font": {"color": "black"}, "id": "financialaid", "label": "financialaid", "node_type": "subreddit", "shape": "dot", "size": 40}, {"color": "#FF6B6B", "font": {"color": "black"}, "id": "sadness", "label": "sadness", "node_type": "emotion", "shape": "dot", "size": 25}, {"color": "#FF6B6B", "font": {"color": "black"}, "id": "surprise", "label": "surprise", "node_type": "emotion", "shape": "dot", "size": 25}, {"color": "#FF6B6B", "font": {"color": "black"}, "id": "neutral", "label": "neutral", "node_type": "emotion", "shape": "dot", "size": 25}, {"color": "#FF6B6B", "font": {"color": "black"}, "id": "fear", "label": "fear", "node_type": "emotion", "shape": "dot", "size": 25}, {"color": "#4ECDC4", "font": {"color": "black"}, "id": "Pell", "label": "Pell", "node_type": "entity", "shape": "dot", "size": 15}, {"color": "#4ECDC4", "font": {"color": "black"}, "id": "Pell Grant", "label": "Pell Grant", "node_type": "entity", "shape": "dot", "size": 15}, {"color": "#4ECDC4", "font": {"color": "black"}, "id": "SAP", "label": "SAP", "node_type": "entity", "shape": "dot", "size": 15}, {"color": "#4ECDC4", "font": {"color": "black"}, "id": "SAI", "label": "SAI", "node_type": "entity", "shape": "dot", "size": 15}, {"color": "#4ECDC4", "font": {"color": "black"}, "id": "Senate", "label": "Senate", "node_type": "entity", "shape": "dot", "size": 15}, {"color": "#4ECDC4", "font": {"color": "black"}, "id": "GPA", "label": "GPA", "node_type": "entity", "shape": "dot", "size": 15}, {"color": "#4ECDC4", "font": {"color": "black"}, "id": "US", "label": "US", "node_type": "entity", "shape": "dot", "size": 15}, {"color": "#4ECDC4", "font": {"color": "black"}, "id": "Pell Grants", "label": "Pell Grants", "node_type": "entity", "shape": "dot", "size": 15}, {"color": "#4ECDC4", "font": {"color": "black"}, "id": "Congress", "label": "Congress", "node_type": "entity", "shape": "dot", "size": 15}, {"color": "#4ECDC4", "font": {"color": "black"}, "id": "IRS", "label": "IRS", "node_type": "entity", "shape": "dot", "size": 15}, {"color": "#4ECDC4", "font": {"color": "black"}, "id": "CSS", "label": "CSS", "node_type": "entity", "shape": "dot", "size": 15}, {"color": "#4ECDC4", "font": {"color": "black"}, "id": "FAFSA", "label": "FAFSA", "node_type": "entity", "shape": "dot", "size": 15}, {"color": "#4ECDC4", "font": {"color": "black"}, "id": "ED", "label": "ED", "node_type": "entity", "shape": "dot", "size": 15}, {"color": "#4ECDC4", "font": {"color": "black"}, "id": "max", "label": "max", "node_type": "entity", "shape": "dot", "size": 15}, {"color": "#4ECDC4", "font": {"color": "black"}, "id": "Trump", "label": "Trump", "node_type": "entity", "shape": "dot", "size": 15}, {"color": "#4ECDC4", "font": {"color": "black"}, "id": "Financial Aid", "label": "Financial Aid", "node_type": "entity", "shape": "dot", "size": 15}, {"color": "#4ECDC4", "font": {"color": "black"}, "id": "COA", "label": "COA", "node_type": "entity", "shape": "dot", "size": 15}, {"color": "#4ECDC4", "font": {"color": "black"}, "id": "RAP", "label": "RAP", "node_type": "entity", "shape": "dot", "size": 15}, {"color": "#4ECDC4", "font": {"color": "black"}, "id": "NASFAA", "label": "NASFAA", "node_type": "entity", "shape": "dot", "size": 15}, {"color": "#4ECDC4", "font": {"color": "black"}, "id": "n\u2019t", "label": "n\u2019t", "node_type": "entity", "shape": "dot", "size": 15}]);
+                  edges = new vis.DataSet([{"from": "financialaid", "to": "sadness", "width": 1}, {"from": "financialaid", "to": "surprise", "width": 1}, {"from": "financialaid", "to": "neutral", "width": 1}, {"from": "financialaid", "to": "fear", "width": 1}, {"from": "financialaid", "to": "Pell", "width": 55}, {"from": "financialaid", "to": "Pell Grant", "width": 17}, {"from": "financialaid", "to": "SAP", "width": 15}, {"from": "financialaid", "to": "SAI", "width": 11}, {"from": "financialaid", "to": "Senate", "width": 10}, {"from": "financialaid", "to": "GPA", "width": 10}, {"from": "financialaid", "to": "US", "width": 8}, {"from": "financialaid", "to": "Pell Grants", "width": 8}, {"from": "financialaid", "to": "Congress", "width": 8}, {"from": "financialaid", "to": "IRS", "width": 8}, {"from": "financialaid", "to": "CSS", "width": 7}, {"from": "financialaid", "to": "FAFSA", "width": 7}, {"from": "financialaid", "to": "ED", "width": 7}, {"from": "financialaid", "to": "max", "width": 6}, {"from": "financialaid", "to": "Trump", "width": 6}, {"from": "financialaid", "to": "Financial Aid", "width": 6}, {"from": "financialaid", "to": "COA", "width": 6}, {"from": "financialaid", "to": "RAP", "width": 6}, {"from": "financialaid", "to": "NASFAA", "width": 5}, {"from": "financialaid", "to": "n\u2019t", "width": 5}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>

@@ -1,0 +1,155 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 800px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#4ECDC4", "font": {"color": "black"}, "id": "Harvard", "label": "Harvard", "node_type": "entity", "shape": "dot", "size": 15}, {"color": "#FF6B6B", "font": {"color": "black"}, "id": "neutral", "label": "neutral", "node_type": "emotion", "shape": "dot", "size": 25}, {"color": "#FF6B6B", "font": {"color": "black"}, "id": "anger", "label": "anger", "node_type": "emotion", "shape": "dot", "size": 25}, {"color": "#FF6B6B", "font": {"color": "black"}, "id": "fear", "label": "fear", "node_type": "emotion", "shape": "dot", "size": 25}, {"color": "#4ECDC4", "font": {"color": "black"}, "id": "Trump", "label": "Trump", "node_type": "entity", "shape": "dot", "size": 15}, {"color": "#4ECDC4", "font": {"color": "black"}, "id": "Israel", "label": "Israel", "node_type": "entity", "shape": "dot", "size": 15}, {"color": "#4ECDC4", "font": {"color": "black"}, "id": "Jewish", "label": "Jewish", "node_type": "entity", "shape": "dot", "size": 15}, {"color": "#4ECDC4", "font": {"color": "black"}, "id": "Jews", "label": "Jews", "node_type": "entity", "shape": "dot", "size": 15}, {"color": "#4ECDC4", "font": {"color": "black"}, "id": "US", "label": "US", "node_type": "entity", "shape": "dot", "size": 15}, {"color": "#4ECDC4", "font": {"color": "black"}, "id": "American", "label": "American", "node_type": "entity", "shape": "dot", "size": 15}, {"color": "#4ECDC4", "font": {"color": "black"}, "id": "Israeli", "label": "Israeli", "node_type": "entity", "shape": "dot", "size": 15}, {"color": "#4ECDC4", "font": {"color": "black"}, "id": "RPL", "label": "RPL", "node_type": "entity", "shape": "dot", "size": 15}, {"color": "#4ECDC4", "font": {"color": "black"}, "id": "America", "label": "America", "node_type": "entity", "shape": "dot", "size": 15}, {"color": "#4ECDC4", "font": {"color": "black"}, "id": "Columbia", "label": "Columbia", "node_type": "entity", "shape": "dot", "size": 15}, {"color": "#4ECDC4", "font": {"color": "black"}, "id": "Harvard University", "label": "Harvard University", "node_type": "entity", "shape": "dot", "size": 15}, {"color": "#4ECDC4", "font": {"color": "black"}, "id": "Wisse", "label": "Wisse", "node_type": "entity", "shape": "dot", "size": 15}, {"color": "#4ECDC4", "font": {"color": "black"}, "id": "Palestinians", "label": "Palestinians", "node_type": "entity", "shape": "dot", "size": 15}, {"color": "#4ECDC4", "font": {"color": "black"}, "id": "Zionism", "label": "Zionism", "node_type": "entity", "shape": "dot", "size": 15}, {"color": "#4ECDC4", "font": {"color": "black"}, "id": "U.S.", "label": "U.S.", "node_type": "entity", "shape": "dot", "size": 15}, {"color": "#4ECDC4", "font": {"color": "black"}, "id": "Americans", "label": "Americans", "node_type": "entity", "shape": "dot", "size": 15}, {"color": "#4ECDC4", "font": {"color": "black"}, "id": "Republican", "label": "Republican", "node_type": "entity", "shape": "dot", "size": 15}, {"color": "#4ECDC4", "font": {"color": "black"}, "id": "Republicans", "label": "Republicans", "node_type": "entity", "shape": "dot", "size": 15}, {"color": "#4ECDC4", "font": {"color": "black"}, "id": "Israelis", "label": "Israelis", "node_type": "entity", "shape": "dot", "size": 15}]);
+                  edges = new vis.DataSet([{"from": "Harvard", "to": "neutral", "width": 4}, {"from": "Harvard", "to": "anger", "width": 2}, {"from": "Harvard", "to": "fear", "width": 2}, {"from": "Harvard", "to": "Harvard", "width": 365}, {"from": "Harvard", "to": "Trump", "width": 88}, {"from": "Harvard", "to": "Israel", "width": 42}, {"from": "Harvard", "to": "Jewish", "width": 41}, {"from": "Harvard", "to": "Jews", "width": 31}, {"from": "Harvard", "to": "US", "width": 20}, {"from": "Harvard", "to": "American", "width": 18}, {"from": "Harvard", "to": "Israeli", "width": 18}, {"from": "Harvard", "to": "RPL", "width": 15}, {"from": "Harvard", "to": "America", "width": 14}, {"from": "Harvard", "to": "Columbia", "width": 12}, {"from": "Harvard", "to": "Harvard University", "width": 12}, {"from": "Harvard", "to": "Wisse", "width": 11}, {"from": "Harvard", "to": "Palestinians", "width": 10}, {"from": "Harvard", "to": "Zionism", "width": 10}, {"from": "Harvard", "to": "U.S.", "width": 9}, {"from": "Harvard", "to": "Americans", "width": 9}, {"from": "Harvard", "to": "Republican", "width": 9}, {"from": "Harvard", "to": "Republicans", "width": 9}, {"from": "Harvard", "to": "Israelis", "width": 9}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>
