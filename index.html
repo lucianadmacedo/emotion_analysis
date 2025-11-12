@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emotion Analysis - Reddit Students</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background: #0d1117;
+            color: #e6edf3;
+            line-height: 1.6;
+        }
+
+        header {
+            background: #161b22;
+            border-bottom: 1px solid #30363d;
+            padding: 2rem 0;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #FF6B6B 0%, #4ECDC4 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            color: #8b949e;
+            font-size: 1.1rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .intro {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .intro h2 {
+            color: #58a6ff;
+            margin-bottom: 1rem;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .stat-card {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .stat-card h3 {
+            color: #8b949e;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card .number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #58a6ff;
+        }
+
+        .graphs-section {
+            margin: 3rem 0;
+        }
+
+        .graph-card {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .graph-card h2 {
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .badge-intl {
+            background: #FF6B6B;
+            color: white;
+        }
+
+        .badge-college {
+            background: #4ECDC4;
+            color: white;
+        }
+
+        .graph-description {
+            color: #8b949e;
+            margin-bottom: 1.5rem;
+            line-height: 1.8;
+        }
+
+        .graph-iframe {
+            width: 100%;
+            height: 700px;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            background: #0d1117;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background: #238636;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: background 0.2s;
+            margin-top: 1rem;
+        }
+
+        .btn:hover {
+            background: #2ea043;
+        }
+
+        .btn-secondary {
+            background: #21262d;
+            border: 1px solid #30363d;
+        }
+
+        .btn-secondary:hover {
+            background: #30363d;
+        }
+
+        .highlights {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .highlight-card {
+            background: #161b22;
+            border-left: 4px solid #58a6ff;
+            padding: 1.5rem;
+            border-radius: 6px;
+        }
+
+        .highlight-card h3 {
+            color: #58a6ff;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .highlight-card ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .highlight-card li {
+            padding: 0.25rem 0;
+            color: #8b949e;
+        }
+
+        .highlight-card li::before {
+            content: "→ ";
+            color: #58a6ff;
+            font-weight: bold;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: #8b949e;
+            border-top: 1px solid #30363d;
+            margin-top: 4rem;
+        }
+
+        footer a {
+            color: #58a6ff;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .graph-iframe {
+                height: 500px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Reddit Student Emotion Analysis</h1>
+        <p class="subtitle">Interactive Network Graphs: International Students vs College Students</p>
+    </header>
+
+    <div class="container">
+        <div class="intro">
+            <h2>About This Project</h2>
+            <p>This analysis explores the emotional landscape of Reddit posts from international students and domestic college students, revealing distinct patterns in their concerns, anxieties, and hopes.</p>
+
+            <div class="stats">
+                <div class="stat-card">
+                    <h3>Total Posts Analyzed</h3>
+                    <div class="number">110</div>
+                </div>
+                <div class="stat-card">
+                    <h3>International Students</h3>
+                    <div class="number">49</div>
+                </div>
+                <div class="stat-card">
+                    <h3>College Students</h3>
+                    <div class="number">61</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Emotions Tracked</h3>
+                    <div class="number">9</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="highlights">
+            <div class="highlight-card">
+                <h3>🌍 International Students</h3>
+                <ul>
+                    <li>Top emotion: Hope (24.1%)</li>
+                    <li>Focus: Visa & immigration (137 mentions)</li>
+                    <li>Hope → US, visa, Canada</li>
+                    <li>Fear → OPT, deportation</li>
+                    <li>Systemic external pressures</li>
+                </ul>
+            </div>
+            <div class="highlight-card">
+                <h3>🎓 College Students</h3>
+                <ul>
+                    <li>Top emotion: Anxiety (22.4%)</li>
+                    <li>Focus: Professors & GPA (205 mentions)</li>
+                    <li>Anxiety → college, professor</li>
+                    <li>Despair → GPA, financial aid</li>
+                    <li>Internal performance pressures</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="graphs-section">
+            <div class="graph-card">
+                <h2>
+                    <span class="badge badge-intl">International Students</span>
+                    Emotion-Entity Network
+                </h2>
+                <div class="graph-description">
+                    <p>This interactive network graph shows how emotions connect to entities in r/InternationalStudents posts.
+                    Notice how <strong>Hope</strong> predominantly connects to <strong>US</strong> (63×) and <strong>visa</strong> (43×),
+                    while <strong>Fear</strong> and <strong>Anxiety</strong> cluster around <strong>OPT</strong> (work authorization)
+                    and <strong>deportation</strong> concerns.</p>
+                    <p><strong>Click and drag</strong> nodes to explore connections. <strong>Hover</strong> over nodes for details.</p>
+                </div>
+                <iframe class="graph-iframe" src="graph_internationalstudents_emotions.html"></iframe>
+                <a href="graph_internationalstudents_emotions.html" class="btn" target="_blank">Open Full Screen</a>
+            </div>
+
+            <div class="graph-card">
+                <h2>
+                    <span class="badge badge-college">College Students</span>
+                    Emotion-Entity Network
+                </h2>
+                <div class="graph-description">
+                    <p>This network reveals the academic-centered emotional landscape of r/college posts.
+                    <strong>Anxiety</strong> and <strong>Hope</strong> both strongly connect to <strong>college</strong> (157× and 165×)
+                    and <strong>professor</strong> (74× and 59×), showing how these entities are central to both positive and
+                    negative emotions.</p>
+                    <p><strong>Click and drag</strong> nodes to explore connections. <strong>Hover</strong> over nodes for details.</p>
+                </div>
+                <iframe class="graph-iframe" src="graph_college_emotions.html"></iframe>
+                <a href="graph_college_emotions.html" class="btn" target="_blank">Open Full Screen</a>
+            </div>
+        </div>
+
+        <div class="intro">
+            <h2>Key Findings</h2>
+            <p style="margin-bottom: 1rem;">The analysis reveals fundamentally different stressors:</p>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 1.5rem;">
+                <div>
+                    <h3 style="color: #FF6B6B; margin-bottom: 0.5rem;">International Students</h3>
+                    <p style="color: #8b949e;">Face <strong>systemic, external threats</strong> - deportation, visa status, work authorization (OPT/H1B), and immigration policy changes. Their emotional landscape is shaped by forces largely outside their control.</p>
+                </div>
+                <div>
+                    <h3 style="color: #4ECDC4; margin-bottom: 0.5rem;">College Students</h3>
+                    <p style="color: #8b949e;">Face <strong>internal, performance-based pressures</strong> - GPA, professor relationships, academic workload, and financial aid. Their stress centers on individual achievement and campus life.</p>
+                </div>
+            </div>
+
+            <div style="margin-top: 2rem; text-align: center;">
+                <a href="https://github.com/lucianadmacedo/emotion_analysis" class="btn" target="_blank">View Full Analysis on GitHub</a>
+                <a href="subreddit_statistics.md" class="btn btn-secondary" target="_blank">Detailed Statistics Report</a>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>Project by Luciana Macedo | Data from Reddit via PRAW | Analysis using spaCy, NetworkX & Pyvis</p>
+        <p><a href="https://github.com/lucianadmacedo/emotion_analysis" target="_blank">GitHub Repository</a></p>
+        <p style="margin-top: 1rem; font-size: 0.9rem;">🤖 Generated with Claude Code</p>
+    </footer>
+</body>
+</html>
